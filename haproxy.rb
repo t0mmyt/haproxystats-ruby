@@ -11,6 +11,7 @@ class HAProxySocket
     @location = location
   end
 
+  # Open a socket, run a command, collect output and close
   def run(command)
     sock = UNIXSocket.new @location
     sock.puts command
@@ -26,6 +27,7 @@ class HAProxySocket
     out
   end
 
+  # Show info from haproxy
   def show_info
       run('show info')
   end
@@ -44,12 +46,13 @@ class HAProxyStats < HAProxySocket
   # Function to extract the data from the stats socket
   # and put into @stats[service][server/aggregate]
   def retrieve(all = false)
-    # 
+    # run 'show stat' on the socket and iterate output
     run('show stat').each do |line|
       if not defined? @headers
         # First row of CSV output is our headers
         @headers = line
       else
+        # @stats Hash populating magic
         this = Hash[*@headers.zip(line).flatten]
         if all or (this['pxname'] and not this['pxname'][0,1] == '_')
           if this['pxname']
@@ -72,6 +75,7 @@ class HAProxyStats < HAProxySocket
   # Return an array of the backend servers for +service+
   def backends(service)
     out = Array.new
+    # iterate the servers removing aggregates for FRONT/BACKEND
     @stats[service].each do |k, v|
       if not (k == 'FRONTEND' or k == 'BACKEND')
         out = out << k
@@ -85,11 +89,13 @@ class HAProxyStats < HAProxySocket
   def upratio(service)
     my_backends = backends(service)
     up = 0
+    # iterate servers and count the UPs
     my_backends.each do |this|
       if @stats[service][this]['status'] == 'UP'
         up += 1
       end
     end
+    # Return the ratio
     up.to_f / my_backends.length.to_f
   end
 end
@@ -99,5 +105,5 @@ ha = HAProxyStats.new '/var/run/haproxy.stats'
 ha.retrieve
 
 ha.services.each do |service|
-  puts service + " " + ha.upratio(service).to_s
+  puts "#{service} #{ha.upratio(service).to_s}"
 end
