@@ -18,7 +18,7 @@ class HAProxySocket
             sock.close
             return out
         end
-        out = sock.read
+        out = first_char + sock.read
         sock.close
         out
     end
@@ -33,7 +33,6 @@ class HAProxyStats < HAProxySocket
     end
 
     def retrieve(all=false)
-        @out = Array.new
         run('show stat').each do |line|
             if not @headers
                 @headers = line
@@ -41,8 +40,11 @@ class HAProxyStats < HAProxySocket
                 @this = Hash[*@headers.zip(line).flatten]
                 if all or (@this['pxname'] and not @this['pxname'][0,1] == '_')
                     if @this['pxname']
-                        if not @stats[@this['pxname']] then @stats[@this['pxname']] = Array.new end
-                        @stats[@this['pxname']] = @stats[@this['pxname']] << @this
+                        # Create hash if one doesn't exist
+                        if not @stats[@this['pxname']]
+                            @stats[@this['pxname']] = Hash.new
+                        end
+                        @stats[@this['pxname']][@this['svname']] = @this
                     end
                 end
             end
@@ -52,9 +54,18 @@ class HAProxyStats < HAProxySocket
     def services
         @stats.keys
     end
+    
+    def backends(service)
+        out = Array.new
+        @stats[service].each do |k, v|
+            if not (k == 'FRONTEND' or k == 'BACKEND')
+                out = out << k
+            end
+        end
+        out
+    end
 end
 
 ha = HAProxyStats.new '/var/run/haproxy.stats'
-ha.retrieve(all=true)
-
-puts ha.services
+ha.retrieve
+pp ha.backends('click2call_ukld5p2001')
