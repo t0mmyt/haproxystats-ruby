@@ -34,17 +34,17 @@ class HAProxyStats < HAProxySocket
 
     def retrieve(all=false)
         run('show stat').each do |line|
-            if not @headers
+            if not defined? @headers
                 @headers = line
             else
-                @this = Hash[*@headers.zip(line).flatten]
-                if all or (@this['pxname'] and not @this['pxname'][0,1] == '_')
-                    if @this['pxname']
+                this = Hash[*@headers.zip(line).flatten]
+                if all or (this['pxname'] and not this['pxname'][0,1] == '_')
+                    if this['pxname']
                         # Create hash if one doesn't exist
-                        if not @stats[@this['pxname']]
-                            @stats[@this['pxname']] = Hash.new
+                        if not @stats[this['pxname']]
+                            @stats[this['pxname']] = Hash.new
                         end
-                        @stats[@this['pxname']][@this['svname']] = @this
+                        @stats[this['pxname']][this['svname']] = this
                     end
                 end
             end
@@ -80,4 +80,4 @@ end
 
 ha = HAProxyStats.new '/var/run/haproxy.stats'
 ha.retrieve
-pp ha.upratio('click2call_ukld5p2001')
+puts ha.upratio('click2call_ukld5p2000')
