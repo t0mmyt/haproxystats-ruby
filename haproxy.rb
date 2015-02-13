@@ -40,15 +40,21 @@ class HAProxyStats < HAProxySocket
             else
                 @this = Hash[*@headers.zip(line).flatten]
                 if all or (@this['pxname'] and not @this['pxname'][0,1] == '_')
-                    if not @stats[@this['pxname']] then @stats[@this['pxname']] = Array.new end
-                    @stats[@this['pxname']] = @stats[@this['pxname']] << @this
+                    if @this['pxname']
+                        if not @stats[@this['pxname']] then @stats[@this['pxname']] = Array.new end
+                        @stats[@this['pxname']] = @stats[@this['pxname']] << @this
+                    end
                 end
             end
         end
     end
+
+    def services
+        @stats.keys
+    end
 end
 
 ha = HAProxyStats.new '/var/run/haproxy.stats'
-ha.retrieve
+ha.retrieve(all=true)
 
-puts ha.stats.keys
+puts ha.services
