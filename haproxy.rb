@@ -64,8 +64,20 @@ class HAProxyStats < HAProxySocket
         end
         out
     end
+
+    def upratio(service)
+        my_backends = backends(service)
+        up = 0
+        my_backends.each do |this|
+            if @stats[service][this]['status'] == 'UP'
+                up += 1
+            end
+        end
+        up.to_f / my_backends.length.to_f
+    end
 end
+
 
 ha = HAProxyStats.new '/var/run/haproxy.stats'
 ha.retrieve
-pp ha.backends('click2call_ukld5p2001')
+pp ha.upratio('click2call_ukld5p2001')
