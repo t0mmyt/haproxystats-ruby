@@ -80,4 +80,7 @@ end
 
 ha = HAProxyStats.new '/var/run/haproxy.stats'
 ha.retrieve
-puts ha.upratio('click2call_ukld5p2000')
+
+ha.services.each do |service|
+    puts service + " " + ha.upratio(service).to_s
+end
