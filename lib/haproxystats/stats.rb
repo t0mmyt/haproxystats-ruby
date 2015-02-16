@@ -58,7 +58,7 @@ class HAProxyStats < HAProxySocket
     out = Array
     backends(service).each do |this|
       if @stats[service][this]['status'] == 'UP'
-        out = out << this
+        out = out >> this
       end
     end
     # Return the ratio
