@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'lib/haproxystats.rb'
+require 'haproxystats'
 
 socket = '/var/run/haproxy.stats'
 
