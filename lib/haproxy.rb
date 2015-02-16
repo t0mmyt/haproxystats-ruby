@@ -73,7 +73,7 @@ class HAProxyStats < HAProxySocket
 
   # Return an array of services
   def services
-      @stats.keys
+      @stats.keys.sort
   end
     
   # Return an array of the backend servers for +service+
@@ -88,18 +88,22 @@ class HAProxyStats < HAProxySocket
     out
   end
 
-  # Return a ratio of the backend servers that are UP (between 0 and 1)
-  # E.g if ratio <= 0.5 then at least half of the backend servers are down
-  def upratio(service)
-    my_backends = backends(service)
-    up = 0
+  # Return number of backend servers for +service+ that are UP
+  def up(service)
+    up_count = 0
     # iterate servers and count the UPs
-    my_backends.each do |this|
+    backends(service).each do |this|
       if @stats[service][this]['status'] == 'UP'
-        up += 1
+        up_count += 1
       end
     end
     # Return the ratio
-    up.to_f / my_backends.length.to_f
+    up_count
+  end
+
+  # Return a ratio of the backend servers that are UP (between 0 and 1)
+  # E.g if ratio <= 0.5 then at least half of the backend servers are down
+  def upratio(service)
+    up.to_f / backends(service).length
   end
 end
