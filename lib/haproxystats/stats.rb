@@ -54,17 +54,14 @@ class HAProxyStats < HAProxySocket
 
   def 
 
-  # Return number of backend servers for +service+ that are UP
   def up(service)
     find(service, 'UP')
   end
 
-  # Return number of backend servers for +service+ that are in MAINT 
   def maint(service)
     find(service, 'MAINT')
   end
 
-  # Return number of backend servers for +service+ that are DOWN
   def down(service)
     find(service, 'DOWN')
   end
