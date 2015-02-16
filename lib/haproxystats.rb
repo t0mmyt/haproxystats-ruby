@@ -104,6 +104,6 @@ class HAProxyStats < HAProxySocket
   # Return a ratio of the backend servers that are UP (between 0 and 1)
   # E.g if ratio <= 0.5 then at least half of the backend servers are down
   def upratio(service)
-    up.to_f / backends(service).length
+    up(service).to_f / backends(service).length
   end
 end
