@@ -3,12 +3,16 @@
 #
 require 'socket'
 require 'csv'
-require 'pp'
 
-# Container class for the socket ... probably shouldn't be called directly
+# Container class for the socket
+# Intended to be inherited by othere classes that require use fo the stats
+# socket (e.g. HAProxyStats)
 class HAProxySocket
+  # Check we have a socket at location and that we can open it
   def initialize(location)
     @location = location
+    raise ArgumentError, "#{location} does not appear to be a socket." unless File.socket?(location)
+    raise IOError, '#{Cannot read/write to socket at ${location}' unless show_info
   end
 
   # Open a socket, run a command, collect output and close
@@ -98,12 +102,4 @@ class HAProxyStats < HAProxySocket
     # Return the ratio
     up.to_f / my_backends.length.to_f
   end
-end
-
-
-ha = HAProxyStats.new '/var/run/haproxy.stats'
-ha.retrieve
-
-ha.services.each do |service|
-  puts "#{service} #{ha.upratio(service).to_s}"
 end
