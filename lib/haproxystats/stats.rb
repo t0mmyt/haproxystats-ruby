@@ -55,10 +55,10 @@ class HAProxyStats < HAProxySocket
   # Return number of backend servers for +service+ that are UP
   def up(service)
     # Return a list of UP severs
-    out = Array
+    out = Array.new
     backends(service).each do |this|
       if @stats[service][this]['status'] == 'UP'
-        out = out >> this
+        out = out << this
       end
     end
     # Return the ratio
