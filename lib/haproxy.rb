@@ -12,7 +12,7 @@ class HAProxySocket
   def initialize(location)
     @location = location
     raise ArgumentError, "#{location} does not appear to be a socket." unless File.socket?(location)
-    raise IOError, '#{Cannot read/write to socket at ${location}' unless show_info
+    raise IOError, 'Cannot read/write to socket at ${location}' unless show_info
   end
 
   # Open a socket, run a command, collect output and close
