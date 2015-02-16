@@ -59,7 +59,7 @@ class HAProxyStats < HAProxySocket
     find(service, 'UP')
   end
 
-  # Return number of backend servers for +service+ that are UP
+  # Return number of backend servers for +service+ that are in MAINT 
   def maint(service)
     find(service, 'MAINT')
   end
