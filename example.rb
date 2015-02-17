@@ -16,7 +16,7 @@ puts "#{my_services.length} services found"
 
 # How many backends are up per service
 my_services.each do |service|
-    puts "#{service}: #{ha.up(service)} of #{ha.backends(service).length}"
+    puts "#{service}: #{ha.up(service).length} of #{ha.backends(service).length}"
 end
 
 # What ratio of servers are up per service
