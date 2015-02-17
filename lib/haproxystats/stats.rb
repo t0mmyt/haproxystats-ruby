@@ -74,6 +74,7 @@ class HAProxyStats < HAProxySocket
   end
 
   private
+  # Generic function for up,down,maint etc to use to match servers
   def find(service, state)
     out = Array.new
     backends(service).each do |this|
