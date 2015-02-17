@@ -82,5 +82,6 @@ class HAProxyStats < HAProxySocket
         out = out << this
       end
     end
+    out
   end
 end
