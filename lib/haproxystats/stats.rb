@@ -52,16 +52,17 @@ class HAProxyStats < HAProxySocket
     out
   end
 
-  def 
-
+  # Return UP servers as array
   def up(service)
     find(service, 'UP')
   end
 
+  # Return MAINT servers as array
   def maint(service)
     find(service, 'MAINT')
   end
 
+  # Return DOWN servers as array
   def down(service)
     find(service, 'DOWN')
   end
@@ -72,10 +73,10 @@ class HAProxyStats < HAProxySocket
     up(service).length.to_f / backends(service).length
   end
 
-  private :find
+  private
   def find(service, state)
     out = Array.new
-    backends(service).do |this|
+    backends(service).each do |this|
       if @stats[service][this]['status'] == state
         out = out << this
       end
