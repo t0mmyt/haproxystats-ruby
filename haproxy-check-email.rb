@@ -8,10 +8,10 @@
 #
 #: vim: set ts=2 sw=2 et:
 require 'rubygems'
-require 'haproxystats'
 require 'socket'
 require 'net/smtp'
 require 'digest'
+gem 'haproxystats', '>=0.0.6'
 
 raise ArgumentError, '4 arguments needed! (socket, smtp_relay, mail_from, rcpt_to)' unless ARGV.length == 4
 raise ArgumentError, 'First Argument should be a Unix socket' unless File.socket?(ARGV[0])
