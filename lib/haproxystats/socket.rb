@@ -16,19 +16,28 @@ class HAProxySocket
   end
 
   # Open a socket, run a command, collect output and close
-  def run(command)
-    sock = UNIXSocket.new @location
-    sock.puts command
-    out = ''
-    first_char = sock.read 2
-    if first_char == '# '
-      out = CSV.parse(sock.read)
+  def run(command, try_again=true)
+    begin
+      sock = UNIXSocket.new @location
+      sock.puts command
+      out = ''
+      first_char = sock.read 2
+      if first_char == '# '
+        out = CSV.parse(sock.read)
+        sock.close
+        return out
+      end
+      out = first_char + sock.read
       sock.close
-      return out
+      out
+    rescue Errno::EPIPE
+      if try_again
+        sock.close
+        run(command, try_again=false)
+      else
+        raise IOError, "IO Error 32 with socket"
+      end
     end
-    out = first_char + sock.read
-    sock.close
-    out
   end
 
   # Show info from haproxy
