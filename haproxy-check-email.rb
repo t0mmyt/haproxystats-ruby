@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # A more advanced example of the haproxystats gem that will send an email when
-# the state of a backend changes
+# the state of a backend changes.
+# 
+# Intended to be run every minute in cron (dirty but temporary)
 #
 # Tom Taylor <tom@tommyt.co.uk>
 #
