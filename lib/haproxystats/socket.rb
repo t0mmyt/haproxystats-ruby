@@ -27,11 +27,14 @@ class HAProxySocket
         sock.close
         return out
       end
-      out = first_char + sock.read
+      if first_char
+        out = first_char + sock.read
+      end
       sock.close
       out
     rescue Errno::EPIPE
-      if try_again
+      if try_again 
+        sleep 0.2
         sock.close
         run(command, try_again=false)
       else

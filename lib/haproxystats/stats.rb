@@ -15,6 +15,8 @@ class HAProxyStats < HAProxySocket
   # and put into @stats[service][server/aggregate]
   def retrieve(all = false)
     # run 'show stat' on the socket and iterate output
+    stats = run('show stat')
+    unless stats.respond_to?('each') then return nil end
     run('show stat').each do |line|
       if not defined? @headers
         # First row of CSV output is our headers
