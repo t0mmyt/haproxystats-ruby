@@ -2,8 +2,8 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = 'haproxystats'
-  s.version     = '0.0.6'
-  s.date        = '2015-02-17'
+  s.version     = '0.0.7'
+  s.date        = '2015-03-02'
   s.summary     = "HAProxy Stats Parser"
   s.description = "Reads and parses stats from HAProxy Unix socket."
   s.authors     = ["Tom Taylor"]
