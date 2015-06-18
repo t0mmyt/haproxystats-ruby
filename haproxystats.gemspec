@@ -15,5 +15,5 @@ Gem::Specification.new do |s|
                   ]
   s.homepage    =
     'https://github.com/t0mmyt/haproxystats-ruby'
-  s.license       = 'ModifiedBSD'
+  s.license       = 'BSD'
 end
